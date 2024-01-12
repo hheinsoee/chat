@@ -1,0 +1,76 @@
+<html>
+
+<head>
+    <title>Simple Chat</title>
+
+    <meta charset="utf-8" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,user-scalable=no" />
+    <link rel="stylesheet" type="text/css" href="/styles.css">
+</head>
+
+<body>
+    <div id="messages"></div>
+    <form id="form" action="">
+        <input id="input" autocomplete="off" placeholder="Type your message..." /><button type="submit">Send</button>
+    </form>
+    <!-- Update the path to jQuery in the script tag -->
+    <script src="/jquery-3.6.4.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        $(document).ready(function () {
+            const socket = io();
+            var lastMessage = {}
+
+            // Listen for user information from the server
+            socket.on('setUserInfo', (userInfo) => {
+                const { id, nickname } = userInfo;
+                const currentUserId = id;
+
+                let storedNickname = localStorage.getItem('nickname');
+
+                // Prompt user for nickname if not set
+                if (!storedNickname) {
+                    storedNickname = prompt('Please enter your nickname:');
+                    localStorage.setItem('nickname', storedNickname);
+                    socket.emit('setNickname', storedNickname);
+                } else {
+                    // If nickname is already set, just emit the update event
+                    socket.emit('setNickname', storedNickname);
+                }
+
+                $('form').submit(function (e) {
+                    e.preventDefault();
+                    const message = $('#input').val();
+
+                    // Send messages as JSON with sender's ID
+                    socket.emit('chat message', message);
+                    $('#input').val('');
+                    return false;
+                });
+
+                socket.on('chat message', function (data) {
+                    const isMe = data.senderId === currentUserId;
+                    const isBot = data.senderId==undefined;
+                    $('#messages').append($(`<div class="messsage ${isBot?"server":""} ${isMe ? "me" : ""}">`).html(`
+                        ${lastMessage.sender !== data.sender ? `<div class="userName ">${isMe ? '(Me)' : data.sender} ${isBot?'🤖':''}</div>`:''} 
+                        <div class="text">${data.message}</div>
+                    `));
+                    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })
+
+                    lastMessage = data
+                });
+
+                // Listen for an update in the user's nickname
+                socket.on('updateNickname', (userId, newNickname) => {
+                    if (currentUserId === userId) {
+                        // Update the stored nickname in localStorage
+                        localStorage.setItem('nickname', newNickname);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>

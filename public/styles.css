@@ -1,0 +1,48 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+#form {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    display: flex;
+    box-sizing: border-box;
+    padding: 0rem 0.6rem;
+    gap: 1rem;
+}
+input {
+    flex: 1;
+    padding: 0.4rem;
+}
+#messages{
+    padding-bottom: 8rem;
+}
+.userName{
+    color: #210099;
+    font-size: small;
+    margin:0rem 1rem;
+    margin-top: 2rem;
+}
+
+.me .userName{
+    color: #009900;
+}
+.server .userName{
+    color:#ff0000;
+}
+.messsage{
+    display: flex;
+    flex-direction: column;
+}
+.messsage.me{
+    align-items: end;
+}
+.messsage.server .text{
+    font-style: italic;
+}
+.text{
+    margin: 0rem 2rem;
+}
