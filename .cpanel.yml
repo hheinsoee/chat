@@ -1,4 +1,6 @@
 deployment:
   tasks:
-    - name: "Update from GitHub"
-      command: "git pull origin master"
+    - export DEPLOYPATH=/home/heinajak/w/chat/
+    - /bin/cp -R * $DEPLOYPATH
+
+    
