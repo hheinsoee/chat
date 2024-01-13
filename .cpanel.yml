@@ -1,0 +1,4 @@
+deployment:
+  tasks:
+    - name: "Update from GitHub"
+      command: "git pull origin master"
