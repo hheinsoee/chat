@@ -1,0 +1,5 @@
+---
+deployments:
+  - deployment: "GitHub Webhook"
+    hook: post_receive
+    command: "deployment-script.sh"

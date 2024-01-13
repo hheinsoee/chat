@@ -1,3 +1,3 @@
 #!/bin/bash
-cd /path/to/your/website
+cd /home/heinajak/w/chat/
 git pull origin master
